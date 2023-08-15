@@ -1,10 +1,11 @@
+import logging
 import os
 import time
-import logging
-import requests
 from dataclasses import dataclass
-from dacite import from_dict
+from typing import Union
 
+import requests
+from dacite import from_dict
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -29,6 +30,7 @@ class Token:
     token_type :
         typically "Bearer"
     """
+
     access_token: str
     scope: str
     issued_at: float
@@ -42,7 +44,9 @@ class Token:
                 raise ValueError(f"{k} is an incorrect data type.")
 
         # Determine if token is expired
-        self.expired = False if time.time() < (self.issued_at + self.expires_in) else True
+        self.expired = (
+            False if time.time() < (self.issued_at + self.expires_in) else True
+        )
         if self.expired is True:
             logger.warning("Specified Token is expired.")
 
@@ -66,9 +70,10 @@ class ClientConfig:
     pem_path : str, optional
         path to PEM file containing required security certificates (Default value = None)
     """
+
     def __init__(
         self,
-        token: Token | None,
+        token: Union[Token, None],
         client_name: str,
         client_id: str = None,
         client_secret: str = None,
@@ -79,11 +84,11 @@ class ClientConfig:
         self.client_name = client_name
 
         if token and token.expired is False:
-            logger.info(f"Specified token is valid.")
+            logger.info("Specified token is valid.")
             self.token = token
 
         if not token or token.expired is True:
-            logger.info(f"No token specified or is expired. Generating new token...")
+            logger.info("No token specified or is expired. Generating new token...")
             # Check to see if required params for obtaining Token are present
             if not client_id:
                 raise ValueError("No client id specified.")
@@ -93,10 +98,10 @@ class ClientConfig:
             self.pem_path = pem_path
 
             # Point to a PEM file containing required security certificates
-            os.environ['REQUESTS_CA_BUNDLE'] = pem_path
+            os.environ["REQUESTS_CA_BUNDLE"] = pem_path
 
             # TODO: Separate configuration from connection. Validate config method first, then connect.
-            url = f"https://whitson.eu.auth0.com/oauth/token"
+            url = "https://whitson.eu.auth0.com/oauth/token"
             payload = {
                 "client_id": client_id,
                 "client_secret": client_secret,

@@ -1,4 +1,5 @@
 import requests
+
 from whitson.client.config import ClientConfig
 
 
@@ -34,8 +35,11 @@ class WhitsonClient:
         """
         response = requests.get(
             url=self.base_url + suffix,
-            headers={"content_type": "application/json", "Authorization": f"Bearer {self.config.token.access_token}"},
-            params=params
+            headers={
+                "content_type": "application/json",
+                "Authorization": f"Bearer {self.config.token.access_token}",
+            },
+            params=params,
         )
         res = response.json()
         if not res:
@@ -58,11 +62,14 @@ class WhitsonClient:
         """
         response = requests.post(
             url=self.base_url + suffix,
-            headers={"content_type": "application/json", "Authorization": f"Bearer {self.config.token.access_token}"},
-            json=payload
+            headers={
+                "content_type": "application/json",
+                "Authorization": f"Bearer {self.config.token.access_token}",
+            },
+            json=payload,
         )
         if 200 <= response.status_code < 300:
-            print(f"Successfully uploaded!")
+            print("Successfully uploaded!")
         else:
             return response.text
 

@@ -1,0 +1,64 @@
+---
+name: build
+
+on:
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: '3.8'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install required dependencies
+        run: |
+          python3 -m pip install --upgrade pip poetry
+          poetry config virtualenvs.create false
+          poetry install
+
+      - name: Linting and static code checks
+        run: |
+          pre-commit run --all-files
+
+
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install required dependencies
+        run: |
+          python3 -m pip install --upgrade pip poetry
+          poetry config virtualenvs.create false
+          poetry install
+
+      - name: Run tests
+        env:
+          CI: 1
+        run: pytest tests
+
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install full dependencies
+        run: |
+          python3 -m pip install --upgrade pip poetry
+
+      - name: Build package
+        run: poetry build

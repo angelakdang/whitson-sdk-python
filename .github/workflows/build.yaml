@@ -21,7 +21,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip poetry
           poetry config virtualenvs.create false
-          poetry install -E numpy
+          poetry install --sync
 
       - name: Linting and static code checks
         run: |

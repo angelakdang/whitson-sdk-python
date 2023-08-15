@@ -2,6 +2,7 @@ import logging
 import os
 import time
 from dataclasses import dataclass
+from typing import Union
 
 import requests
 from dacite import from_dict
@@ -72,7 +73,7 @@ class ClientConfig:
 
     def __init__(
         self,
-        token: Token | None,
+        token: Union[Token, None],
         client_name: str,
         client_id: str = None,
         client_secret: str = None,

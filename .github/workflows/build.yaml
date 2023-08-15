@@ -21,7 +21,7 @@ jobs:
         run: |
           python3 -m pip install --upgrade pip poetry
           poetry config virtualenvs.create false
-          poetry install --sync
+          poetry install
 
       - name: Linting and static code checks
         run: |
@@ -36,7 +36,7 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install core dependencies
+      - name: Install required dependencies
         run: |
           python3 -m pip install --upgrade pip poetry
           poetry config virtualenvs.create false

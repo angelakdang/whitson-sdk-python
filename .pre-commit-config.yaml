@@ -1,0 +1,45 @@
+repos:
+ - repo: https://github.com/timothycrosley/isort
+   rev: 5.12.0
+   hooks:
+     - id: isort
+       args: ["--profile", "black"]
+
+ - repo: https://github.com/psf/black
+   rev: 22.3.0
+   hooks:
+     - id: black
+
+ - repo: https://github.com/PyCQA/flake8
+   rev: 6.0.0
+   hooks:
+     - id: flake8
+       exclude: __init__.py
+       args:
+         - --max-line-length=120
+
+ - repo: https://github.com/pre-commit/pre-commit-hooks
+   rev: v3.4.0
+   hooks:
+     - id: debug-statements
+     - id: trailing-whitespace
+     - id: check-yaml
+     - id: check-builtin-literals
+     - id: end-of-file-fixer
+     - id: check-ast
+     - id: check-docstring-first
+     - id: check-case-conflict
+     - id: detect-private-key
+     - id: mixed-line-ending
+     - id: check-json
+
+ - repo: https://github.com/asottile/pyupgrade
+   rev: v3.6.0
+   hooks:
+   - id: pyupgrade
+     args: [--py39-plus]
+
+ - repo: https://github.com/pre-commit/pre-commit-hooks
+   rev: v4.4.0
+   hooks:
+   - id: check-added-large-files

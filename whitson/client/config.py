@@ -2,6 +2,7 @@ import os
 import time
 import logging
 import requests
+from dataclasses import dataclass
 from dacite import from_dict
 
 
@@ -13,6 +14,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+@dataclass
 class Token:
     """Defines the Token object to be passed into the ClientConfig if it exists.
 
@@ -27,25 +29,28 @@ class Token:
     token_type :
         typically "Bearer"
     """
+    access_token: str
+    scope: str
+    issued_at: float
+    expires_in: int
+    token_type: str
 
-    def __init__(
-            self,
-            access_token: str,
-            scope: str,
-            issued_at: float,
-            expires_in: int,
-            token_type: str
-    ):
-        self.access_token = access_token
-        self.scope = scope
-        self.issued_at = issued_at
-        self.expires_in = expires_in
-        self.token_type = token_type
+    def __post_init__(self):
+        # Check to see if values are of the correct data type
+        for k, v in self.__annotations__.items():
+            if not isinstance(getattr(self, k), v):
+                raise ValueError(f"{k} is an incorrect data type.")
+
+        # Determine if token is expired
+        self.expired = False if time.time() < (self.issued_at + self.expires_in) else True
+        if self.expired is True:
+            logger.warning("Specified Token is expired.")
 
 
 class ClientConfig:
     """Configuration object to instantiate the WhitsonClient
 
+    Obtains a Token if one is not already specified.
     client_id and client_secret must be specified if Token is not specified.
 
     Parameters
@@ -69,15 +74,16 @@ class ClientConfig:
         client_secret: str = None,
         pem_path: str = None,
     ):
+        if not client_name:
+            raise ValueError("No client name specified.")
         self.client_name = client_name
 
-        # Determine if token is expired
-        is_not_expired = True if time.time() < (token.issued_at + token.expires_in) else False
-
-        if token and is_not_expired:
+        if token and token.expired is False:
+            logger.info(f"Specified token is valid.")
             self.token = token
-            logger.info(f"Access token specified.")
-        else:
+
+        if not token or token.expired is True:
+            logger.info(f"No token specified or is expired. Generating new token...")
             # Check to see if required params for obtaining Token are present
             if not client_id:
                 raise ValueError("No client id specified.")
@@ -89,6 +95,7 @@ class ClientConfig:
             # Point to a PEM file containing required security certificates
             os.environ['REQUESTS_CA_BUNDLE'] = pem_path
 
+            # TODO: Separate configuration from connection. Validate config method first, then connect.
             url = f"https://whitson.eu.auth0.com/oauth/token"
             payload = {
                 "client_id": client_id,

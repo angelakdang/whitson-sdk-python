@@ -1,4 +1,8 @@
 # Whitson Python SDK
+
+[![build](https://github.com/angelakdang/whitson-sdk-python/actions/workflows/release/badge.svg)](https://github.com/angelakdang/whitson-sdk-python/actions/actions?query=workflows:release)
+[![GitHub](https://img.shields.io/github/license/angelakdang/whitson-sdk-python)](https://github.com/angelakdang/whitson-sdk-python/blob/master/LICENSE.txt)
+
 This is the Whitson Python SDK for developers, data scientists, and engineers working with
 [Whitson+](https://whitson.com/software/).
 

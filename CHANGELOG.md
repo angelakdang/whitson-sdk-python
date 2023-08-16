@@ -13,7 +13,11 @@ Changes are grouped as follows
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
-## [0.1.0] - 2023-08-16
+## [0.1.1] - 2023-08-16
+### Fixed
+- Documentation on PyPI
+
+## [0.1.0] - 2023-08-15
 ### Added
 - `Token` dataclass to hold information about the access token issued by Whitson. Checks to see if the token is expired.
 - `ClientConfig` class to request an access token if the `Token` is not specified or is expired.

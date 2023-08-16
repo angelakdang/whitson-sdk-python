@@ -1,6 +1,14 @@
 # Whitson Python SDK
+
+[![release](https://github.com/angelakdang/whitson-sdk-python/actions/workflows/release.yaml/badge.svg)](https://github.com/angelakdang/whitson-sdk-python/actions/actions?query=workflows:release)
+[![GitHub](https://img.shields.io/github/license/angelakdang/whitson-sdk-python)](https://github.com/angelakdang/whitson-sdk-python/blob/master/LICENSE.txt)
+[![PyPI version](https://badge.fury.io/py/whitson-sdk-python.svg)](https://pypi.org/project/whitson-sdk-python)
+
 This is the Whitson Python SDK for developers, data scientists, and engineers working with
 [Whitson+](https://whitson.com/software/).
+
+The API documentation is accessible with the client name:
+[https://<CLIENT_NAME>.whitson.com/api-external/swagger/]()
 
 The source code is located in the `whitson/client` directory.
 
@@ -53,3 +61,9 @@ The access token can be stored in a `JSON` file as shown below:
    'issued_at': 1692136969.7024412
  }
 ```
+## Acknowledgements
+
+I learned a great deal from the amazing and talented people at [Cognite](https://www.cognite.com/en/) and this
+repository is _heavily_ based off of the structure of the publicly available
+[Cognite Python SDK](https://github.com/cognitedata/cognite-sdk-python).
+Thank you for the incredible experience and the continued learning your resources have provided me.

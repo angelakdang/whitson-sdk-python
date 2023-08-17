@@ -141,3 +141,8 @@ cython_debug/
 .idea
 
 $HOME
+
+# Testing
+token.json
+test.py
+custom_cacerts.pem

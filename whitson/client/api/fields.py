@@ -29,6 +29,7 @@ class FieldsAPI(APIClient):
                 >>> client = WhitsonClient()
                 >>> res = client.fields.retrieve(field_id=1)
         """
+        # TODO: This function is exactly like projects.retrieve
         fields = self.list()
         field = [f for f in fields if f.id == field_id]
         if field:

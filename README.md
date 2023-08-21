@@ -61,6 +61,12 @@ The access token can be stored in a `JSON` file as shown below:
    'issued_at': 1692136969.7024412
  }
 ```
+
+## Improvements
+
+- [ ] The `list()` and `retrieve()` functions in the `api/` classes are very similiar. Need to find a way to
+  simplify this.
+
 ## Acknowledgements
 
 I learned a great deal from the amazing and talented people at [Cognite](https://www.cognite.com/en/) and this

@@ -4,6 +4,8 @@ from requests import Response
 
 from whitson.client._api_client import APIClient
 from whitson.client.api.fields import FieldsAPI
+from whitson.client.api.production_data import ProductionDataAPI
+from whitson.client.api.projects import ProjectsAPI
 from whitson.client.api.wells import WellsAPI
 from whitson.client.config import ClientConfig
 
@@ -25,6 +27,8 @@ class WhitsonClient:
         self._api_client = APIClient(self.config)
         self.fields = FieldsAPI(self.config)
         self.wells = WellsAPI(self.config)
+        self.projects = ProjectsAPI(self.config)
+        self.production_data = ProductionDataAPI(self.config)
 
     def get(self, url: str, params: Optional[dict[str, Any]] = None) -> Response:
         """Perform a generic GET request to an arbitrary path in the API."""

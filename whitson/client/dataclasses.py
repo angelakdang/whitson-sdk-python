@@ -32,43 +32,49 @@ class Field:
 
 @dataclass
 class Well:
+    # TODO: Are any of these required for analysis?
+    Sw_i: Union[float, None] = None
+    bothole_lat: Union[float, None] = None
+    bothole_long: Union[float, None] = None
+    bounded: Union[str, None] = None
+    clusters: Union[int, None] = None
+    county: Union[str, None] = None
+    cr: Union[float, None] = None
+    created: Union[str, None] = None
+    custom_attributes: Union[dict, None] = None  # guessed this type
+    external_id: Union[str, None] = None
+    fluid_pumped: Union[float, None] = None
+    gamma_f: Union[float, None] = None
+    gamma_m: Union[float, None] = None
+    groups: Union[list, None] = None  # guessed this type
+    h: Union[float, None] = None
+    h_f: Union[float, None] = None
+    id: Union[int, None] = None  # Whitson well id
+    l_w: Union[float, None] = None
+    n_f: Union[float, None] = None
     name: Union[str, None] = None
-    id: Union[int, None] = None
+    note: Union[str, None] = None
+    p_res_i: Union[float, None] = None
+    phi: Union[float, None] = None
+    process_id: Union[int, None] = None
+    project_id: Union[int, None] = None
+    prop_pumped: Union[float, None] = None
+    reservoir: Union[str, None] = None
+    salinity: Union[float, None] = None
+    spacing: Union[float, None] = None
+    stages: Union[int, None] = None
+    state: Union[str, None] = None
+    surf_lat: Union[float, None] = None
+    surf_long: Union[float, None] = None
+    t_res: Union[float, None] = None
+    uwi_api: Union[str, None] = None  # Ovintiv License Number
 
-    {
-        "Sw_i": 35.47724393292561,
-        "bothole_lat": 55.109579999999994,
-        "bothole_long": -119.34174,
-        "bounded": "bounded",
-        "clusters": None,
-        "county": "07009W60",
-        "cr": 4e-06,
-        "created": "2023-07-07T04:26:54",
-        "custom_attributes": None,
-        "external_id": None,
-        "fluid_pumped": 29081.565516000002,
-        "gamma_f": 0.0,
-        "gamma_m": 0.0,
-        "groups": None,
-        "h": 164.05,
-        "h_f": 164.05,
-        "id": 227045,
-        "l_w": 4106.9555119999995,
-        "n_f": 100.0,
-        "name": "A01-32-070-09W6",
-        "note": None,
-        "p_res_i": 4482.93447673951,
-        "phi": 0.0289740754782467,
-        "process_id": 12,
-        "project_id": 159,
-        "prop_pumped": 3039725.64676,
-        "reservoir": "G",
-        "salinity": 0.0,
-        "spacing": None,
-        "stages": 11,
-        "state": "1-32-70-9W6 PAD",
-        "surf_lat": 55.09881,
-        "surf_long": -119.32231,
-        "t_res": 187.76821850857257,
-        "uwi_api": "406344",
-    }
+    def __post_init__(self):
+        # Check to see if bounded parameter has correct values
+        well_classification = ("bounded", "unbounded", "half-bounded")
+        if self.bounded not in well_classification:
+            return ValueError(
+                f"Value for 'bounded' ({self.bounded}) is not one of: {well_classification}"
+            )
+
+        # TODO: Change created to a datetime format

@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 from requests import Response
 
@@ -30,10 +30,10 @@ class WhitsonClient:
         self.projects = ProjectsAPI(self.config)
         self.production_data = ProductionDataAPI(self.config)
 
-    def get(self, url: str, params: Optional[dict[str, Any]] = None) -> Response:
+    def get(self, url: str, params: Optional[Dict[str, Any]] = None) -> Response:
         """Perform a generic GET request to an arbitrary path in the API."""
         return self._api_client.get(url=url, params=params)
 
-    def post(self, url: str, payload: Optional[dict[str, Any]] = None) -> str:
+    def post(self, url: str, payload: Optional[Dict[str, Any]] = None) -> str:
         """Perform a generic POST request to an arbitrary path in the API."""
         return self._api_client.post(url=url, payload=payload)

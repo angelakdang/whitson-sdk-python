@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 
 import requests
 from requests import Response
@@ -14,13 +14,13 @@ class APIClient:
             "Authorization": f"Bearer {config.token.access_token}",
         }
 
-    def get(self, url: str, params: Optional[dict[str, Any]] = None) -> Response:
+    def get(self, url: str, params: Optional[Dict[str, Any]] = None) -> Response:
         response = requests.get(url=url, params=params, headers=self.headers)
         if not response:
             raise Exception("No information retrieved")
         return response
 
-    def post(self, url: str, payload: Optional[dict[str, Any]]) -> str:
+    def post(self, url: str, payload: Optional[Dict[str, Any]]) -> str:
         """Perform a generic POST request to an arbitrary path in the API."""
         response = requests.post(
             url=url,

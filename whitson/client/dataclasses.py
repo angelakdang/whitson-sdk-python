@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Union
 
 from dacite import from_dict
@@ -78,3 +79,24 @@ class Well:
             )
 
         # TODO: Change created to a datetime format
+
+
+@dataclass
+class ProductionData:
+    well_id: str
+    qg_sc: list[tuple[datetime, Union[float, None]]]
+    gor_sep: list[tuple[datetime, Union[float, None]]]
+    qg_sep: list[tuple[datetime, Union[float, None]]]
+    qo_sc: list[tuple[datetime, Union[float, None]]]
+    qg_gas_lift: list[tuple[datetime, Union[float, None]]]
+    gor_sc: list[tuple[datetime, Union[float, None]]]
+    liquid_level: list[tuple[datetime, Union[float, None]]]
+    p_tubing: list[tuple[datetime, Union[float, None]]]
+    p_casing: list[tuple[datetime, Union[float, None]]]
+    choke_size: list[tuple[datetime, Union[float, None]]]
+    qo_sep: list[tuple[datetime, Union[float, None]]]
+    p_sep: list[tuple[datetime, Union[float, None]]]
+    qw_sc: list[tuple[datetime, Union[float, None]]]
+    t_sep: list[tuple[datetime, Union[float, None]]]
+    qw_sep: list[tuple[datetime, Union[float, None]]]
+    p_wf_measured: list[tuple[datetime, Union[float, None]]]

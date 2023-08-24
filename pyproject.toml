@@ -19,6 +19,7 @@ pytest = "^7.4.0"
 pyment = "^0.3.3"
 twine = "^4.0.2"
 python-decouple = "^3.8"
+polars = "^0.18.15"
 
 [build-system]
 requires = ["poetry-core"]

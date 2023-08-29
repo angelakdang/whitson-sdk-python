@@ -36,7 +36,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit src / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -141,3 +141,6 @@ cython_debug/
 .idea
 
 $HOME
+
+# Testing
+/src

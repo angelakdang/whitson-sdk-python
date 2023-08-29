@@ -1,3 +1,4 @@
+import json
 from typing import Any, Dict, Optional
 
 import requests
@@ -31,3 +32,12 @@ class APIClient:
             print("Successfully uploaded!")
         else:
             return response.text
+
+    @staticmethod
+    def get_total_pages(response: Response) -> int:
+        pagination = json.loads(response.headers["X-Pagination"])
+        return pagination["total_pages"]
+
+    @staticmethod
+    def filter_params(params: Dict[str, Any]):
+        return {k: v for k, v in params.items() if v}

@@ -1,9 +1,17 @@
+import logging
 from datetime import datetime
 
 from dacite import from_dict
 
 from whitson.client._api_client import APIClient
 from whitson.client.dataclasses import Well
+
+logging.basicConfig(
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.INFO,
+)
+logger = logging.getLogger(__name__)
 
 
 class WellsAPI(APIClient):
@@ -29,8 +37,7 @@ class WellsAPI(APIClient):
         date: str = "",
         project_id: int = None,
         uwi_api: str = None,
-        page: int = 1,
-        page_size: int = 10,
+        page_size: int = 5000,  # max size
     ):
         """Gets the BHP forecast calculation object attached to the well
         filtered by the provided arguments in the database.
@@ -56,6 +63,10 @@ class WellsAPI(APIClient):
             )
             return response.json()
         else:
+            # Instantiate values
+            page = 1
+            result = []
+
             # Filter out params; well_id not included
             # if it's specified, user is looking for return on single well
             all_params = {
@@ -65,9 +76,28 @@ class WellsAPI(APIClient):
                 "page": page,
                 "page_size": page_size,
             }
-            params = {k: v for k, v in all_params.items() if v}
+            params = APIClient.filter_params(all_params)
+            logger.debug(f"Retrieving data for {params}")
 
             response = self.get(
                 url=f"{self.base_url}/wells/bhp_calculation", params=params
             )
-            return response.json()
+            result.extend(response.json())
+
+            # If results are longer than one page
+            if len(result) == page_size:
+                logger.info("Results may be longer than one page. Retrieving...")
+                while len(response.json()) > 0:
+                    page += 1
+                    params["page"] = page
+                    response = self.get(
+                        url=f"{self.base_url}/wells/bhp_calculation", params=params
+                    )
+                    logger.info(
+                        f"Page: {page}, Result: {len(result)}, Params: {params}"
+                    )
+                    result.extend(response.json())
+                    if page > 999:  # arbitrary stop point
+                        break
+
+            return result

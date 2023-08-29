@@ -36,7 +36,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit src / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -143,8 +143,4 @@ cython_debug/
 $HOME
 
 # Testing
-token.json
-test.py
-custom_cacerts.pem
-well_list.json
-utils.py
+/src

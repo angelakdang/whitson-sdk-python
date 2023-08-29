@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Tuple, Union
+from typing import Dict, List, Union
 
 from dacite import from_dict
 
@@ -84,19 +84,19 @@ class Well:
 @dataclass
 class ProductionData:
     well_id: str
-    qg_sc: List[Tuple[datetime, Union[float, None]]]
-    gor_sep: List[Tuple[datetime, Union[float, None]]]
-    qg_sep: List[Tuple[datetime, Union[float, None]]]
-    qo_sc: List[Tuple[datetime, Union[float, None]]]
-    qg_gas_lift: List[Tuple[datetime, Union[float, None]]]
-    gor_sc: List[Tuple[datetime, Union[float, None]]]
-    liquid_level: List[Tuple[datetime, Union[float, None]]]
-    p_tubing: List[Tuple[datetime, Union[float, None]]]
-    p_casing: List[Tuple[datetime, Union[float, None]]]
-    choke_size: List[Tuple[datetime, Union[float, None]]]
-    qo_sep: List[Tuple[datetime, Union[float, None]]]
-    p_sep: List[Tuple[datetime, Union[float, None]]]
-    qw_sc: List[Tuple[datetime, Union[float, None]]]
-    t_sep: List[Tuple[datetime, Union[float, None]]]
-    qw_sep: List[Tuple[datetime, Union[float, None]]]
-    p_wf_measured: List[Tuple[datetime, Union[float, None]]]
+    qg_sc: List[Dict[str, Union[datetime, float, None]]]
+    gor_sep: List[Dict[str, Union[datetime, float, None]]]
+    qg_sep: List[Dict[str, Union[datetime, float, None]]]
+    qo_sc: List[Dict[str, Union[datetime, float, None]]]
+    qg_gas_lift: List[Dict[str, Union[datetime, float, None]]]
+    gor_sc: List[Dict[str, Union[datetime, float, None]]]
+    liquid_level: List[Dict[str, Union[datetime, float, None]]]
+    p_tubing: List[Dict[str, Union[datetime, float, None]]]
+    p_casing: List[Dict[str, Union[datetime, float, None]]]
+    choke_size: List[Dict[str, Union[datetime, float, None]]]
+    qo_sep: List[Dict[str, Union[datetime, float, None]]]
+    p_sep: List[Dict[str, Union[datetime, float, None]]]
+    qw_sc: List[Dict[str, Union[datetime, float, None]]]
+    t_sep: List[Dict[str, Union[datetime, float, None]]]
+    qw_sep: List[Dict[str, Union[datetime, float, None]]]
+    p_wf_measured: List[Dict[str, Union[datetime, float, None]]]

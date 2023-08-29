@@ -13,6 +13,10 @@ Changes are grouped as follows
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [0.2.0] - 2023-08-16
+### Added
+- Placeholder
+
 ## [0.1.1] - 2023-08-16
 ### Fixed
 - Documentation on PyPI

@@ -16,18 +16,20 @@ Example usage:
 
 ```python
 import json
-from decouple import config
 from dacite import from_dict
-from whitson.client import Token, ClientConfig, WhitsonClient
+from decouple import config
+from whitson.client import WhitsonClient
+from whitson.client.config import Token, ClientConfig
 
+# Get environment variables
+client_name = config("WHITSON_CLIENT_NAME")
+client_id = config("WHITSON_CLIENT_ID")
+client_secret = config("WHITSON_CLIENT_SECRET")
+path_to_token = config("PATH_TO_TOKEN")
 
-# Define connection details as environment variables
-CLIENT_NAME = config("WHITSON_CLIENT_NAME")
-CLIENT_ID = config("WHITSON_CLIENT_ID")
-CLIENT_SECRET = config("WHITSON_CLIENT_SECRET")
-
+# CONNECT TO WHITSON
 # Check for access token
-with open("token.json") as f:
+with open(path_to_token) as f:
     token = from_dict(data=json.load(f), data_class=Token)
 
 # Define configuration parameters to retrieve access token
@@ -35,19 +37,43 @@ with open("token.json") as f:
 # If certain certificates are required for data to be requested, this can be specified in a PEM file
 config = ClientConfig(
     token=token,
-    client_name=CLIENT_NAME,
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    pem_path="custom_cacerts.pem"
+    client_name=client_name,
+    client_id=client_id,
+    client_secret=client_secret,
+    pem_path="src/custom_cacerts.pem",
 )
 
 # Instantiate client and retrieve data
 client = WhitsonClient(config)
 
-# Example
-project_id = 161
-well_id = 228368
-result = client.get(suffix=f"wells/{well_id}/bhp_calculation", params={"project_id": project_id})
+# Constants
+FIELD_ID = 1
+PROJECT_ID = 159
+
+# Get field
+field = client.fields.retrieve(field_id=FIELD_ID)
+print(f"{field.name} field retrieved.")
+
+# Get project associated with field
+project = client.projects.retrieve(field_id=field.id, project_id=PROJECT_ID)
+print(f"{project.name} project retrieved.")
+
+# Get wells associated to the project
+wells = client.wells.list(project_id=project.id)
+well = wells[0]
+print(f"{well.name} retrieved.")
+
+# Run BHP calculations for a well
+client.wells.run_bhp_calc(well_id=well.id)
+print("BHP calculations complete.")
+
+# Retrieve BHP calculations for a well
+bhp_corr_well = client.wells.retrieve_bhp_calcs(well_id=well.id)
+print(f"BHP calculations retrieved for {well.name} ({well.id}).")
+
+# Retrieve all BHP calculations in a project
+bhp_corr = client.wells.retrieve_bhp_calcs(project_id=project.id)
+print("BHP calculations retrieved for all wells.")
 ```
 
 The access token can be stored in a `JSON` file as shown below:
@@ -66,6 +92,7 @@ The access token can be stored in a `JSON` file as shown below:
 
 - [ ] The `list()` and `retrieve()` functions in the `api/` classes are very similiar. Need to find a way to
   simplify this.
+- [ ] Tests need to be written to show expected result when retrieving data
 
 ## Acknowledgements
 

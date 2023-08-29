@@ -13,6 +13,19 @@ class ProductionDataAPI(APIClient):
     def retrieve(
         self, well_id: str = None, formatted: bool = True
     ) -> Union[ProductionData, Dict]:
+        """Retrieve production data for a specified well.
+
+        Parameters
+        ----------
+        well_id: str
+            Whitson well id
+        formatted: bool
+            If True, returns the ProductionData class. If False, returns a raw JSON response.
+
+        Returns
+        -------
+            Production data in ProductionData format or raw JSON (dictionary) format.
+        """
         data_formatted = {"well_id": str(well_id)}
         response = self.get(url=f"{self.base_url}/wells/{well_id}/production_data")
         data = response.json()

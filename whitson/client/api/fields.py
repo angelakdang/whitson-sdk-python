@@ -6,6 +6,7 @@ from whitson.client.dataclasses import Field
 
 class FieldsAPI(APIClient):
     def list(self):
+        """List all the Fields in a Whitson project."""
         response = self.get(url=f"{self.base_url}/fields")
         return [from_dict(data=f, data_class=Field) for f in response.json()]
 

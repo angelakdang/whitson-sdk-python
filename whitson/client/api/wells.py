@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from typing import Dict, List, Union
 
 from dacite import from_dict
 
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 class WellsAPI(APIClient):
     DATE_FORMAT = "%Y-%m-%d"
 
-    def list(self, project_id):
+    def list(self, project_id: int) -> List[Union[Well, None]]:
         """Returns all the wells for a specified project."""
         response = self.get(
             url=f"{self.base_url}/wells", params={"project_id": project_id}
@@ -28,8 +29,12 @@ class WellsAPI(APIClient):
         pass
 
     def run_bhp_calc(self, well_id: int = None):
+        """Run BHP calculations for a specified well."""
         response = self.get(url=f"{self.base_url}/wells/{well_id}/run_bhp_calculation")
-        return response
+        if response.status_code <= 202:
+            logger.info(response.reason)
+        else:
+            raise RuntimeError(response.reason)
 
     def retrieve_bhp_calcs(
         self,
@@ -38,11 +43,29 @@ class WellsAPI(APIClient):
         project_id: int = None,
         uwi_api: str = None,
         page_size: int = 5000,  # max size
-    ):
-        """Gets the BHP forecast calculation object attached to the well
-        filtered by the provided arguments in the database.
+    ) -> Union[Dict, List[Dict]]:
+        """Gets the BHP forecast calculation objects attached to the well
+
         Returns a list of all BHP calculations from date and onwards if date is specified.
         Return all days if not specified.
+
+        Parameters
+        ----------
+        well_id: int
+            Whitson well id
+        date:
+            Date in WellsAPI.DATE_FORMAT
+        project_id: int
+            Whitson project id
+        uwi_api: str
+            Unique well identifier as specified in the Whitson project.
+            Can only specify well_id OR uwi_api, not both.
+        page_size: int
+            How large the results page will be. Max 5000.
+
+        Returns
+        -------
+            Dictionary (for a well) or list of dictionaries (for multiple wells)
         """
         # Should only input well_id OR uwi_api
         if well_id and uwi_api:
@@ -57,12 +80,14 @@ class WellsAPI(APIClient):
                 )
 
         if well_id:
+            # Return data for only one well
             params = {"date": date} if date else None
             response = self.get(
                 url=f"{self.base_url}/wells/{well_id}/bhp_calculation", params=params
             )
             return response.json()
         else:
+            # Return for all wells
             # Instantiate values
             page = 1
             result = []

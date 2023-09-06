@@ -12,8 +12,27 @@ The API documentation is accessible with the client name:
 
 The source code is located in the `whitson/client` directory.
 
-Example usage:
+## Example usage
 
+Store your secrets in a `.env` file:
+```bash
+WHITSON_CLIENT_NAME=<client-name>
+WHITSON_CLIENT_ID=<client-id>
+WHITSON_CLIENT_SECRET=<client-secret>
+```
+
+If you have it, store your token in a JSON file (only the `access_token` key is required):
+```json
+ {
+   'access_token': '<access-token-value>',
+   'scope': 'get:api post:api delete:api',
+   'expires_in': 86400,
+   'token_type': 'Bearer',
+   'issued_at': 1692136969.7024412
+ }
+```
+
+In a Python file:
 ```python
 import json
 from dacite import from_dict
@@ -40,7 +59,7 @@ config = ClientConfig(
     client_name=client_name,
     client_id=client_id,
     client_secret=client_secret,
-    pem_path="src/custom_cacerts.pem",
+    pem_path="src/custom_cacerts.pem",  # optional, may be required to traverse firewall
 )
 
 # Instantiate client and retrieve data

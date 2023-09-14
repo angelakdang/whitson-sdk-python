@@ -12,8 +12,28 @@ The API documentation is accessible with the client name:
 
 The source code is located in the `whitson/client` directory.
 
-Example usage:
+## Example usage
 
+Store your secrets in a `.env` file:
+```bash
+WHITSON_CLIENT_NAME=<client-name>
+WHITSON_CLIENT_ID=<client-id>
+WHITSON_CLIENT_SECRET=<client-secret>
+PATH_TO_TOKEN=token.json
+```
+
+If you have it, store your token in a JSON file (only the `access_token` key is required):
+```json
+ {
+   'access_token': '<access-token-value>',
+   'scope': 'get:api post:api delete:api',
+   'expires_in': 86400,
+   'token_type': 'Bearer',
+   'issued_at': 1692136969.7024412
+ }
+```
+
+In a Python file:
 ```python
 import json
 from dacite import from_dict
@@ -40,7 +60,7 @@ config = ClientConfig(
     client_name=client_name,
     client_id=client_id,
     client_secret=client_secret,
-    pem_path="src/custom_cacerts.pem",
+    pem_path="src/custom_cacerts.pem",  # optional, may be required to traverse firewall
 )
 
 # Instantiate client and retrieve data
@@ -75,19 +95,6 @@ print(f"BHP calculations retrieved for {well.name} ({well.id}).")
 bhp_corr = client.wells.retrieve_bhp_calcs(project_id=project.id)
 print("BHP calculations retrieved for all wells.")
 ```
-
-The access token can be stored in a `JSON` file as shown below:
-
-```json
- {
-   'access_token': '<access-token-value>',
-   'scope': 'get:api post:api delete:api',
-   'expires_in': 86400,
-   'token_type': 'Bearer',
-   'issued_at': 1692136969.7024412
- }
-```
-
 ## Improvements
 
 - [ ] The `list()` and `retrieve()` functions in the `api/` classes are very similiar. Need to find a way to

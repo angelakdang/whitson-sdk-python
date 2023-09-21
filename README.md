@@ -12,8 +12,28 @@ The API documentation is accessible with the client name:
 
 The source code is located in the `whitson/client` directory.
 
-Example usage:
+## Example usage
 
+Store your secrets in a `.env` file:
+```bash
+WHITSON_CLIENT_NAME=<client-name>
+WHITSON_CLIENT_ID=<client-id>
+WHITSON_CLIENT_SECRET=<client-secret>
+PATH_TO_TOKEN=token.json
+```
+
+If you have it, store your token in a JSON file (only the `access_token` key is required):
+```json
+ {
+   'access_token': '<access-token-value>',
+   'scope': 'get:api post:api delete:api',
+   'expires_in': 86400,
+   'token_type': 'Bearer',
+   'issued_at': 1692136969.7024412
+ }
+```
+
+In a Python file:
 ```python
 from decouple import config
 
@@ -69,7 +89,6 @@ print(f"BHP calculations retrieved for {well.name} ({well.id}).")
 bhp_corr = client.wells.retrieve_bhp_calcs(project_id=project.id)
 print("BHP calculations retrieved for all wells.")
 ```
-
 The access token is stored at the `token_path` as a `JSON` file as shown below:
 
 ```json

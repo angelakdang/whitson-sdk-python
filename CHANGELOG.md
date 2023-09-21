@@ -13,6 +13,12 @@ Changes are grouped as follows
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [0.3.0] - 2023-09-21
+### Added
+- Updated `WellsAPI.retrieve_bhp_calcs()` to improve performance. Default retrieval is first page. User must
+  determine whether to retrieve all pages by specifying `None`
+- Streamline authentication. Example updated in README.
+
 ## [0.2.0] - 2023-08-16
 ### Added
 - `APIClient` to generalize calls to API. Include generic get and post methods as well as some static methods to

@@ -50,6 +50,10 @@ class WellsAPI(APIClient):
         Returns a list of all BHP calculations from date and onwards if date is specified.
         Return all days if not specified.
 
+        If no well_id or uwi_api is specified, BHP data will be retrieved for all wells.
+        .. warning::
+            Retrieving BHP data for all wells in a project result in poor performance.
+
         Parameters
         ----------
         well_id: int
@@ -57,14 +61,17 @@ class WellsAPI(APIClient):
         date:
             Date in WellsAPI.DATE_FORMAT
         project_id: int
-            Whitson project id
+            Whitson project id. Only used for retrieving BHP values in bulk (more than one well)
         uwi_api: str
             Unique well identifier as specified in the Whitson project.
             Can only specify well_id OR uwi_api, not both.
+            Only used for retrieving BHP values in bulk (more than one well)
         page_num: Union[int, None] (Default = 1)
             Which page to retrieve. If None, retrieves all.
+            Only used for retrieving BHP values in bulk (more than one well)
         page_size: int
             How large the results page will be. Max 5000.
+            Only used for retrieving BHP values in bulk (more than one well)
 
         Returns
         -------
@@ -84,7 +91,13 @@ class WellsAPI(APIClient):
 
         if well_id:
             # Return data for only one well
-            params = {"date": date} if date else None
+            params = (
+                {
+                    "date": date,
+                }
+                if date
+                else None
+            )
             response = self.get(
                 url=f"{self.base_url}/wells/{well_id}/bhp_calculation", params=params
             )

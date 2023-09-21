@@ -42,10 +42,8 @@ class WellsAPI(APIClient):
         date: str = "",
         project_id: int = None,
         uwi_api: str = None,
-        page_num: Union[
-            int, None
-        ] = 1,  # if specified, only single page retrieved. None = all
-        page_size: int = 5000,  # max size
+        page_num: Union[int, None] = 1,
+        page_size: int = 5000,
     ) -> Union[Dict, List[Dict]]:
         """Gets the BHP forecast calculation objects attached to the well
 
@@ -63,6 +61,8 @@ class WellsAPI(APIClient):
         uwi_api: str
             Unique well identifier as specified in the Whitson project.
             Can only specify well_id OR uwi_api, not both.
+        page_num: Union[int, None] (Default = 1)
+            Which page to retrieve. If None, retrieves all.
         page_size: int
             How large the results page will be. Max 5000.
 

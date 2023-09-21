@@ -42,6 +42,9 @@ class WellsAPI(APIClient):
         date: str = "",
         project_id: int = None,
         uwi_api: str = None,
+        page_num: Union[
+            int, None
+        ] = 1,  # if specified, only single page retrieved. None = all
         page_size: int = 5000,  # max size
     ) -> Union[Dict, List[Dict]]:
         """Gets the BHP forecast calculation objects attached to the well
@@ -87,9 +90,7 @@ class WellsAPI(APIClient):
             )
             return response.json()
         else:
-            # Return for all wells
             # Instantiate values
-            page = 1
             result = []
 
             # Filter out params; well_id not included
@@ -98,23 +99,33 @@ class WellsAPI(APIClient):
                 "date": date,
                 "project_id": project_id,
                 "uwi_api": uwi_api,
-                "page": page,
                 "page_size": page_size,
             }
             params = APIClient.filter_params(all_params)
             logger.debug(f"Retrieving data for {params}")
 
-            response = self.get(
-                url=f"{self.base_url}/wells/bhp_calculation", params=params
-            )
-            result.extend(response.json())
-
-            # If results are longer than one page
-            if len(result) == page_size:
-                logger.info("Results may be longer than one page. Retrieving...")
+            # If page number is specified
+            if type(page_num) is int:
+                params["page"] = page_num
+                response = self.get(
+                    url=f"{self.base_url}/wells/bhp_calculation", params=params
+                )
+                logger.info(
+                    f"Page: {page_num}, Result: {len(result)}, Params: {params}"
+                )
+                result.extend(response.json())
+                if len(result) == page_size:
+                    logger.warning("Results may be longer than one page.")
+            # If no page number is specified
+            elif page_num is None:
+                params["page"] = 1
+                response = self.get(
+                    url=f"{self.base_url}/wells/bhp_calculation", params=params
+                )
+                result.extend(response.json())
                 while len(response.json()) > 0:
-                    page += 1
-                    params["page"] = page
+                    params["page"] += 1
+                    page = params["page"]
                     response = self.get(
                         url=f"{self.base_url}/wells/bhp_calculation", params=params
                     )

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "whitson-sdk-python"
-version = "0.2.0"
+version = "0.3.0"
 description = "Whitson Python SDK for developers, data scientists, and engineers working with"
 authors = ["Angela Dang Atkinson <Angela.DangAtkinson@ovintiv.com>"]
 license = "MIT License"
@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include="whitson", from="."}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 requests = "^2.31.0"
 dacite = "^1.8.1"
 
@@ -19,9 +19,13 @@ pytest = "^7.4.0"
 pyment = "^0.3.3"
 twine = "^4.0.2"
 python-decouple = "^3.8"
-polars = "^0.18.15"
 scikit-learn = "^1.3.0"
 arrow-odbc = "^1.2.3"
+clickhouse-connect = "^0.6.12"
+pyodbc = "^4.0.39"
+sqlalchemy = "^2.0.20"
+pandas = "^2.1.0"
+polars = "^0.19.3"
 
 [build-system]
 requires = ["poetry-core"]

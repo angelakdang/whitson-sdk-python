@@ -42,12 +42,17 @@ class WellsAPI(APIClient):
         date: str = "",
         project_id: int = None,
         uwi_api: str = None,
-        page_size: int = 5000,  # max size
+        page_num: Union[int, None] = 1,
+        page_size: int = 5000,
     ) -> Union[Dict, List[Dict]]:
         """Gets the BHP forecast calculation objects attached to the well
 
         Returns a list of all BHP calculations from date and onwards if date is specified.
         Return all days if not specified.
+
+        If no well_id or uwi_api is specified, BHP data will be retrieved for all wells.
+        .. warning::
+            Retrieving BHP data for all wells in a project result in poor performance.
 
         Parameters
         ----------
@@ -56,12 +61,17 @@ class WellsAPI(APIClient):
         date:
             Date in WellsAPI.DATE_FORMAT
         project_id: int
-            Whitson project id
+            Whitson project id. Only used for retrieving BHP values in bulk (more than one well)
         uwi_api: str
             Unique well identifier as specified in the Whitson project.
             Can only specify well_id OR uwi_api, not both.
+            Only used for retrieving BHP values in bulk (more than one well)
+        page_num: Union[int, None] (Default = 1)
+            Which page to retrieve. If None, retrieves all.
+            Only used for retrieving BHP values in bulk (more than one well)
         page_size: int
             How large the results page will be. Max 5000.
+            Only used for retrieving BHP values in bulk (more than one well)
 
         Returns
         -------
@@ -81,15 +91,19 @@ class WellsAPI(APIClient):
 
         if well_id:
             # Return data for only one well
-            params = {"date": date} if date else None
+            params = (
+                {
+                    "date": date,
+                }
+                if date
+                else None
+            )
             response = self.get(
                 url=f"{self.base_url}/wells/{well_id}/bhp_calculation", params=params
             )
             return response.json()
         else:
-            # Return for all wells
             # Instantiate values
-            page = 1
             result = []
 
             # Filter out params; well_id not included
@@ -98,23 +112,33 @@ class WellsAPI(APIClient):
                 "date": date,
                 "project_id": project_id,
                 "uwi_api": uwi_api,
-                "page": page,
                 "page_size": page_size,
             }
             params = APIClient.filter_params(all_params)
             logger.debug(f"Retrieving data for {params}")
 
-            response = self.get(
-                url=f"{self.base_url}/wells/bhp_calculation", params=params
-            )
-            result.extend(response.json())
-
-            # If results are longer than one page
-            if len(result) == page_size:
-                logger.info("Results may be longer than one page. Retrieving...")
+            # If page number is specified
+            if type(page_num) is int:
+                params["page"] = page_num
+                response = self.get(
+                    url=f"{self.base_url}/wells/bhp_calculation", params=params
+                )
+                logger.info(
+                    f"Page: {page_num}, Result: {len(result)}, Params: {params}"
+                )
+                result.extend(response.json())
+                if len(result) == page_size:
+                    logger.warning("Results may be longer than one page.")
+            # If no page number is specified
+            elif page_num is None:
+                params["page"] = 1
+                response = self.get(
+                    url=f"{self.base_url}/wells/bhp_calculation", params=params
+                )
+                result.extend(response.json())
                 while len(response.json()) > 0:
-                    page += 1
-                    params["page"] = page
+                    params["page"] += 1
+                    page = params["page"]
                     response = self.get(
                         url=f"{self.base_url}/wells/bhp_calculation", params=params
                     )

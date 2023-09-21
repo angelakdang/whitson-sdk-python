@@ -38,32 +38,34 @@ class TestToken:
 
 class TestClientConfig:
     def test_token_specified(self, token):
-        config = ClientConfig(token=token, client_name="client_name")
+        config = ClientConfig(
+            client_name="client_name", token_path="tests/client/token.json"
+        )
         assert config.token.access_token == "abcdefghijklmnopqrstuvwxyz"
 
     def test_no_client_name(self):
         with pytest.raises(ValueError, match="No client name specified."):
             ClientConfig(
-                token=None,
                 client_name=None,
-                client_id="client_id",
-                client_secret="client_secret",
+                token_path="tests/client/token.json",
             )
 
     def test_no_client_id(self):
+        """Wrong token path requires ClientConfig to generate new token, requiring client_id AND client_secret."""
         with pytest.raises(ValueError, match="No client id specified."):
             ClientConfig(
-                token=None,
                 client_name="client_name",
+                token_path="wrong_token_path.json",
                 client_id=None,
                 client_secret="client_secret",
             )
 
     def test_no_client_secret(self):
+        """Wrong token path requires ClientConfig to generate new token, requiring client_id AND client_secret."""
         with pytest.raises(ValueError, match="No client secret specified."):
             ClientConfig(
-                token=None,
                 client_name="client_name",
+                token_path="wrong_token_path.json",
                 client_id="client_id",
                 client_secret=None,
             )

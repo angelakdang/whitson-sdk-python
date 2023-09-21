@@ -1,8 +1,8 @@
+import json
 import logging
 import os
 import time
 from dataclasses import dataclass
-from typing import Union
 
 import requests
 from dacite import from_dict
@@ -59,8 +59,6 @@ class ClientConfig:
 
     Parameters
     ----------
-    token : Token
-        Token
     client_name : str
         client name, defined by Whitson
     client_id : str, optional
@@ -69,12 +67,14 @@ class ClientConfig:
         client secret obtained from Whitson (Default value = None)
     pem_path : str, optional
         path to PEM file containing required security certificates (Default value = None)
+    token_path : str (Default value = "token.json")
+        path to where the token information is stored (or where it will be stored)
     """
 
     def __init__(
         self,
-        token: Union[Token, None],
         client_name: str,
+        token_path: str = "token.json",
         client_id: str = None,
         client_secret: str = None,
         pem_path: str = None,
@@ -83,11 +83,21 @@ class ClientConfig:
             raise ValueError("No client name specified.")
         self.client_name = client_name
 
+        if token_path is None:
+            raise ValueError("A token path must be specified. e.g. 'token.json'")
+
+        # Check for access token
+        try:
+            with open(token_path) as f:
+                token = from_dict(data=json.load(f), data_class=Token)
+        except FileNotFoundError:
+            token = None
+
         if token and token.expired is False:
             logger.info("Specified token is valid.")
             self.token = token
 
-        if not token or token.expired is True:
+        if token is None or token.expired is True:
             logger.info("No token specified or is expired. Generating new token...")
             # Check to see if required params for obtaining Token are present
             if not client_id:
@@ -96,6 +106,7 @@ class ClientConfig:
                 raise ValueError("No client secret specified.")
             self.client_id = client_id
             self.pem_path = pem_path
+            self.token_path = token_path
 
             # Point to a PEM file containing required security certificates
             os.environ["REQUESTS_CA_BUNDLE"] = pem_path
@@ -115,4 +126,6 @@ class ClientConfig:
             data["issued_at"] = issued_at
 
             self.token = from_dict(data=data, data_class=Token)
+            with open(token_path, "w") as outfile:
+                json.dump(data, outfile)
             logger.info(f"New token retrieved: {data}")

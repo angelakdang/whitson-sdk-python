@@ -35,32 +35,26 @@ If you have it, store your token in a JSON file (only the `access_token` key is 
 
 In a Python file:
 ```python
-import json
-from dacite import from_dict
 from decouple import config
+
 from whitson.client import WhitsonClient
-from whitson.client.config import Token, ClientConfig
+from whitson.client.config import ClientConfig
 
 # Get environment variables
 client_name = config("WHITSON_CLIENT_NAME")
 client_id = config("WHITSON_CLIENT_ID")
 client_secret = config("WHITSON_CLIENT_SECRET")
-path_to_token = config("PATH_TO_TOKEN")
+path_to_token = config("WHITSON_TOKEN_PATH")
 
 # CONNECT TO WHITSON
-# Check for access token
-with open(path_to_token) as f:
-    token = from_dict(data=json.load(f), data_class=Token)
-
-# Define configuration parameters to retrieve access token
-# If no token is specified, a new one will be requested and the output printed.
+# If no token_path is specified, the default location ("token.json") will be used.
 # If certain certificates are required for data to be requested, this can be specified in a PEM file
 config = ClientConfig(
-    token=token,
     client_name=client_name,
     client_id=client_id,
     client_secret=client_secret,
     pem_path="src/custom_cacerts.pem",  # optional, may be required to traverse firewall
+    token_path=path_to_token  # where the token will be saved
 )
 
 # Instantiate client and retrieve data
@@ -95,6 +89,18 @@ print(f"BHP calculations retrieved for {well.name} ({well.id}).")
 bhp_corr = client.wells.retrieve_bhp_calcs(project_id=project.id)
 print("BHP calculations retrieved for all wells.")
 ```
+The access token is stored at the `token_path` as a `JSON` file as shown below:
+
+```json
+ {
+   'access_token': '<access-token-value>',
+   'scope': 'get:api post:api delete:api',
+   'expires_in': 86400,
+   'token_type': 'Bearer',
+   'issued_at': 1692136969.7024412
+ }
+```
+
 ## Improvements
 
 - [ ] The `list()` and `retrieve()` functions in the `api/` classes are very similiar. Need to find a way to

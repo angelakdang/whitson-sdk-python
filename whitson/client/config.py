@@ -74,11 +74,15 @@ class ClientConfig:
     def __init__(
         self,
         client_name: str,
+        token_path: str = "token.json",
         client_id: str = None,
         client_secret: str = None,
         pem_path: str = None,
-        token_path: str = "token.json",
     ):
+        if not client_name:
+            raise ValueError("No client name specified.")
+        self.client_name = client_name
+
         if token_path is None:
             raise ValueError("A token path must be specified. e.g. 'token.json'")
 
@@ -89,15 +93,11 @@ class ClientConfig:
         except FileNotFoundError:
             token = None
 
-        if not client_name:
-            raise ValueError("No client name specified.")
-        self.client_name = client_name
-
         if token and token.expired is False:
             logger.info("Specified token is valid.")
             self.token = token
 
-        if not token or token.expired is True:
+        if token is None or token.expired is True:
             logger.info("No token specified or is expired. Generating new token...")
             # Check to see if required params for obtaining Token are present
             if not client_id:

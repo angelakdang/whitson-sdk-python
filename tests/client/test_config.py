@@ -38,14 +38,16 @@ class TestToken:
 
 class TestClientConfig:
     def test_token_specified(self, token):
-        config = ClientConfig(client_name="client_name", token_path="token.json")
+        config = ClientConfig(
+            client_name="client_name", token_path="tests/client/token.json"
+        )
         assert config.token.access_token == "abcdefghijklmnopqrstuvwxyz"
 
     def test_no_client_name(self):
         with pytest.raises(ValueError, match="No client name specified."):
             ClientConfig(
                 client_name=None,
-                token_path="token.json",
+                token_path="tests/client/token.json",
             )
 
     def test_no_client_id(self):

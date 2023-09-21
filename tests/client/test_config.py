@@ -38,7 +38,9 @@ class TestToken:
 
 class TestClientConfig:
     def test_token_specified(self, token):
-        config = ClientConfig(client_name="client_name", token_path="token.json")
+        config = ClientConfig(
+            client_name="client_name", client_id="client_id", token_path="token.json"
+        )
         assert config.token.access_token == "abcdefghijklmnopqrstuvwxyz"
 
     def test_no_client_name(self):

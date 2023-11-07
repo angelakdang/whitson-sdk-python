@@ -22,7 +22,8 @@ WHITSON_CLIENT_SECRET=<client-secret>
 PATH_TO_TOKEN=token.json
 ```
 
-If you have it, store your token in a JSON file (only the `access_token` key is required):
+If you have it, store your token in a JSON file. If not, it will be automatically generated and saved in the
+directory specified by `PATH_TO_TOKEN`:
 ```json
  {
    'access_token': '<access-token-value>',
@@ -88,17 +89,6 @@ print(f"BHP calculations retrieved for {well.name} ({well.id}).")
 # Retrieve all BHP calculations in a project
 bhp_corr = client.wells.retrieve_bhp_calcs(project_id=project.id)
 print("BHP calculations retrieved for all wells.")
-```
-The access token is stored at the `token_path` as a `JSON` file as shown below:
-
-```json
- {
-   'access_token': '<access-token-value>',
-   'scope': 'get:api post:api delete:api',
-   'expires_in': 86400,
-   'token_type': 'Bearer',
-   'issued_at': 1692136969.7024412
- }
 ```
 
 ## Improvements

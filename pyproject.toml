@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "whitson-sdk-python"
-version = "0.3.0"
-description = "Whitson Python SDK for developers, data scientists, and engineers working with"
+version = "0.3.1"
+description = "Whitson Python SDK for developers, data scientists, and engineers working with Whitson+"
 authors = ["Angela Dang Atkinson <Angela.DangAtkinson@ovintiv.com>"]
 license = "MIT License"
 readme = "README.md"

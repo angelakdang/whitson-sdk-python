@@ -13,11 +13,15 @@ Changes are grouped as follows
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [0.3.1] - 2023-09-25
+### Improved
+- Improved documentation for various methods and README
+
 ## [0.3.0] - 2023-09-21
 ### Added
 - Updated `WellsAPI.retrieve_bhp_calcs()` to improve performance. Default retrieval is first page. User must
   determine whether to retrieve all pages by specifying `None`
-- Streamline authentication. Example updated in README.
+- Streamline authentication. Example updated in READM E.
 
 ## [0.2.0] - 2023-08-16
 ### Added

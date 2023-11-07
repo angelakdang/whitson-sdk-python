@@ -19,7 +19,17 @@ class WellsAPI(APIClient):
     DATE_FORMAT = "%Y-%m-%d"
 
     def list(self, project_id: int) -> List[Union[Well, None]]:
-        """Returns all the wells for a specified project."""
+        """Returns all the wells for a specified project.
+
+        Parameters
+        ----------
+        project_id: int
+            Whitson project ID
+
+        Returns
+        -------
+            List of Well objects
+        """
         response = self.get(
             url=f"{self.base_url}/wells", params={"project_id": project_id}
         )
@@ -28,8 +38,18 @@ class WellsAPI(APIClient):
     def retrieve(self, well_id: int = None, external_id: str = None):
         pass
 
-    def run_bhp_calc(self, well_id: int = None):
-        """Run BHP calculations for a specified well."""
+    def run_bhp_calc(self, well_id: int = None) -> None:
+        """Run BHP calculations for a specified well.
+
+        Parameters
+        ----------
+        well_id: int
+            Whitson well id
+
+        Returns
+        -------
+            None
+        """
         response = self.get(url=f"{self.base_url}/wells/{well_id}/run_bhp_calculation")
         if response.status_code <= 202:
             logger.info(response.reason)
